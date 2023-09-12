@@ -1,24 +1,29 @@
-OpenID Connect Integration Guideline 
+# OpenID Connect Integration Guideline 
 
-Scope
+## Scope
 This document only covers the OIDC integration guideline. SAML integration remains unchanged to the previous integration guideline, but the given metadata.xml will change to metadata.xml. A future goal is to combine SAML and OIDC integration guideline into one document that covers both requirements.
 
+## About OpenID Connect 
 OpenID Connect is a protocol that enables authentication and authorization between an identity provider (IdP) and a client application (business application, or relaying party in the context of OpenID Connect). It builds on the OAuth 2.0 framework and provides a standard way for clients to authenticate users and obtain information about their identity.
-The portal provides a central identity provider (IdP) for authenticating portal users.
 
-Requirements & Terminology
+## Identity Provider (IdP)
+The ekir portal provides a central identity provider (IdP) for authenticating portal users.
+
+## Requirements & Terminology
 To make sure the integration is successful, the vendor is responsible to ensure all of these:
-•	Whenever this document refers to a "business application" in the context of OpenID Connect, it is understood to mean a relaying parties (RP) as defined in the OpenID Connect specifications.
-•	For brevity, throughout this document, the term "business application" will be abbreviated as "BA".
-•	All identities are provided from a central Single Sign-On (SSO) identity provider (hereafter abbreviated to "IdP") managed by EKiR through the EKiR portal.
-•	It should be emphasized that in the context of OpenID Connect, the IdP does not implement authorization. Instead, it is the responsibility of the business application to assign permissions (roles, rights) for a user. To achieve this, a separate API interface can be used which provides additional functions and information about the user. Vendors can obtain specialized machine-to-machine (M2M) access tokens to access this interface, allowing for seamless integration with the business application. Further details can be found by following this link to the user information service.
-•	All content of the business application must be served using https.
-•	CORS must be allowed for portal.ekir.de for a successfull integration into the portal.
-•	OpenID Connect Single Logout (SLO) must be implemented. More information here.
-•	The user ID (uidNumber) serves as the unique identifier for each user. It is imperative to note that no other attribute, such as username or email, MUST BE used for identification as these attributes may change over time. A list of provided user attributes can be found here.
-•	A BA must not allow any configuration of user information managed by the IdP, such as email or name. Additionally, the BA must not allow to set a user password to login independent from the IdP.
+-	Whenever this document refers to a "business application" in the context of OpenID Connect, it is understood to mean a relaying parties (RP) as defined in the OpenID Connect specifications.
+-	For brevity, throughout this document, the term "business application" will be abbreviated as "BA".
+-	All identities are provided from a central Single Sign-On (SSO) identity provider (hereafter abbreviated to "IdP") managed by EKiR through the EKiR portal.
 
-Configuration parameters
+-	It should be emphasized that in the context of OpenID Connect, the IdP does not implement authorization. Instead, it is the responsibility of the business application to assign permissions (roles, rights) for a user. To achieve this, a separate API interface can be used which provides additional functions and information about the user. Vendors can obtain specialized machine-to-machine (M2M) access tokens to access this interface, allowing for seamless integration with the business application. Further details can be found by following this link to the user information service.
+
+-	All content of the business application must be served using https.
+-	CORS must be allowed for portal.ekir.de for a successfull integration into the portal.
+-	OpenID Connect Single Logout (SLO) must be implemented. More information here.
+-	The user ID (uidNumber) serves as the unique identifier for each user. It is imperative to note that no other attribute, such as username or email, MUST BE used for identification as these attributes may change over time. A list of provided user attributes can be found here.
+-	A BA must not allow any configuration of user information managed by the IdP, such as email or name. Additionally, the BA must not allow to set a user password to login independent from the IdP.
+
+## Configuration parameters
 Additionally to the above, the vendor is required to provide the following information:
 •	Redirect URI: In order to login users, we must know where to redirect the user after a successful login attempt.
 •	Login URI: An endpoint in the BA that automatically initiates the login flow and redirects the user to the IdP. This is important for the user experience (UX), i.e. the user is immediately logged in after opening the application in the portal. In constrast to SAML, OpenID Connect does not specify a SSO-initiated login flow, so we require an endpoint to automatically start an BA-initiated login flow.
