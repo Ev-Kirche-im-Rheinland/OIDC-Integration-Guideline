@@ -1,15 +1,15 @@
-# OpenID Connect Integration Guideline 
+# openid connect integration guideline 
 
-## Scope
+## scope
 This document only covers the OIDC integration guideline. SAML integration remains unchanged to the previous integration guideline, but the given metadata.xml will change to metadata.xml. A future goal is to combine SAML and OIDC integration guideline into one document that covers both requirements.
 
-## About OpenID Connect 
+## about openid connect 
 OpenID Connect is a protocol that enables authentication and authorization between an identity provider (IdP) and a client application (business application, or relaying party in the context of OpenID Connect). It builds on the OAuth 2.0 framework and provides a standard way for clients to authenticate users and obtain information about their identity.
 
-## Identity Provider (IdP)
+## identity provider (IdP)
 The ekir portal provides a central identity provider (IdP) for authenticating portal users.
 
-## Requirements & Terminology
+## requirements & terminology
 To make sure the integration is successful, the vendor is responsible to ensure all of these:
 
 -	Whenever this document refers to a "business application" in the context of OpenID Connect, it is understood to mean a relaying parties (RP) as defined in the OpenID Connect specifications.
@@ -25,7 +25,7 @@ To make sure the integration is successful, the vendor is responsible to ensure 
 -	The user ID (uidNumber) serves as the unique identifier for each user. It is imperative to note that no other attribute, such as username or email, MUST BE used for identification as these attributes may change over time. A list of provided user attributes can be found here.
 -	A BA must not allow any configuration of user information managed by the IdP, such as email or name. Additionally, the BA must not allow to set a user password to login independent from the IdP.
 
-## Configuration parameters
+## configuration parameters
 Additionally to the above, the vendor is required to provide the following information:
 -	Redirect URI: In order to login users, we must know where to redirect the user after a successful login attempt.
 -	Login URI: An endpoint in the BA that automatically initiates the login flow and redirects the user to the IdP. This is important for the user experience (UX), i.e. the user is immediately logged in after opening the application in the portal. In constrast to SAML, OpenID Connect does not specify a SSO-initiated login flow, so we require an endpoint to automatically start an BA-initiated login flow.
@@ -46,13 +46,12 @@ After the vendor has specified the required configuration parameters, the follow
 - Token Endpoint (optional, if JWKS provided): This is the endpoint that the vendor's application will use to request an access token from the IdP.
 - User Info Endpoint (optional, if JWKS provided): This is the endpoint that the vendor's application will use to request information about the user from the IdP.
 
-## Single Logout (SLO)
+## single logout (SLO)
 Each application must guarantee that the SLO is working properly. If the SLO is not working properly, the SLO chain will be broken and the logout will not be completed. Currently "Front-Channel" is used. During a front-channel logout event initiated by the end-user, the IdP will send additional logout requests to all BAs that the user has logged in to. Each BA must guarantee that after a successfull SLO request, the user's current session is terminated: Cookies are marked as expired, sessions in backend are removed/terminated.
 
-## OpenID Flows
+## openid connect flows
 In OpenID Connect, authentication is performed using one of several flows, which determine the steps involved in the authentication process. The most commonly used OpenID Connect flows are:
 1. Authorization Code Flow: This is the most commonly used flow in OpenID Connect. In this flow, the client sends the user to the authorization server to obtain an authorization code. The user authenticates with the authorization server and, if successful, the authorization server returns an authorization code to the client. The client then exchanges the authorization code for an ID token and access token.
-
 2. Implicit Flow: The implicit flow is similar to the authorization code flow, but the ID token and access token are returned directly to the client, without the need for an additional token exchange step. This flow is used for clients that are unable to securely store a client secret, such as JavaScript or mobile applications.
 3. Hybrid Flow: The hybrid flow is a combination of the authorization code flow and the implicit flow. It provides the security of the authorization code flow and the convenience of the implicit flow.
 4. Client Credentials Flow: The client credentials flow is used for client authentication, rather than user authentication. In this flow, the client presents its credentials directly to the authorization server, which returns an access token. This flow is typically used for server-to-server communication.
@@ -60,14 +59,15 @@ The choice of which flow to use will depend on the requirements and type of the 
 For SPAs, we suggest the Implicit Flow. For all other applications, we require the authorization code flow.
 We will never support the Client Credentials Flow.
 
-## User information service
+## user information service
 The identity provider uses JWT tokens to transmit a limited amount of user information to the connected BA. This is a unique sequential number, the current e-mail address of the respective user and the "username", which corresponds to the e-mail prefix before the "@" character. More information here.
 A separate information service is provided for the exchange of additional information between the portal and the BA. The information service for providing additional user-related information is implemented as a REST API and secured via HTTPS. Each BA is given dedicated machine-to-machine (M2M) access, and the additional information that can be retrieved is defined for each BA separately.
 
-## API specification require a login, and can be found here.
+## api specification 
+API specification require a login.
 Note that the existence of a user information service does not obligate vendors to use it. The decision to integrate with this service is made on a case-by-case basis, taking into consideration whether it makes sense to automate permission management for the relevant business application.
 
-## User attributes
+## user attributes
 The following user attributes are provided to the BA by default:
 •	lastName
 •	firstName
